@@ -49,7 +49,7 @@
 <section id="startup-palace" class="slide level1">
 <h1>Startup Palace</h1>
 <p>Nous concevons et développons des applications web. <br><small>(parmi d'autres activités)</small></p>
-<p>Nous aidons des startups à proposer de la valeur à leurs marchés : la <strong>qualité</strong> des apps est importante.</p>
+<p>Nous aidons des startups à proposer de la valeur à leurs marchés : la <strong>qualité</strong> des applications est importante.</p>
 <p>On veut éviter un <em>facteur bus</em> trop faible.</p>
 <figure class="stretch">
 <img src="img/bus.gif" alt="">
@@ -64,6 +64,127 @@
 <figure class="stretch">
 <img src="img/team.gif" alt="">
 </figure>
+</section>
+<section id="mais-revenons-un-peu-en-arrière..." class="slide level1">
+<h1>Mais revenons un peu en arrière...</h1>
+<p> </p>
+<figure class="stretch">
+<img src="img/back.gif" alt="">
+</figure>
+<p>... quand il n'y avait qu'un seul développeur.</p>
+</section>
+<section id="collaboration-unipersonnelle" class="slide level1">
+<h1>Collaboration unipersonnelle</h1>
+<p>La source de vérité du projet est sur le poste du dev.</p>
+<p>Le dev gère tout manuellement :</p>
+<ul>
+<li>écriture du code</li>
+<li>dépendances externes</li>
+<li>construction de l'application</li>
+<li>déploiement de l'application</li>
+</ul>
+<figure class="stretch">
+<img src="img/alone.gif" alt="">
+</figure>
+</section>
+<section id="écriture-du-code" class="slide level1">
+<h1>Écriture du code</h1>
+<p>On prend l'exemple d'un site développé avec Jekyll.</p>
+<blockquote>
+<figure>
+<img src="img/jekyll.png" />
+</figure>
+<p>Transform your plain text into static websites and blogs.</p>
+<p><a href="https://jekyllrb.com/" class="uri">https://jekyllrb.com/</a></p>
+</blockquote>
+</section>
+<section id="écriture-du-code-1" class="slide level1">
+<h1>Écriture du code</h1>
+<p>Le dev est seul. Il n'a pas besoin de partager son code ou d'y incorporer des modifications faites par d'autres.</p>
+<div class="smallcode">
+<pre class="text"><code>.
+├── _config.yml
+├── _drafts
+|   ├── begin-with-the-crazy-ideas.md
+|   └── on-simplicity-in-technology.md
+├── _includes
+|   ├── footer.html
+|   └── header.html
+├── _layouts
+|   ├── default.html
+|   └── post.html
+├── _posts
+|   ├── 2007-10-29-why-every-programmer-should-play-nethack.md
+|   └── 2009-04-26-barcamp-boston-4-roundup.md
+├── _data
+|   └── members.yml
+├── _site
+├── .jekyll-metadata
+└── index.html</code></pre>
+</div>
+</section>
+<section id="dépendances-externes" class="slide level1">
+<h1>Dépendances externes</h1>
+<p>Le projet a besoin de <a href="https://jquery.com/">jQuery</a> pour fonctionner.</p>
+<p>Le dev va donc :</p>
+<ul>
+<li>télécharger le fichier <code>jquery-3.1.1.min.js</code> depuis le site officiel</li>
+<li>le placer dans l'arborescence du projet Jekyll</li>
+</ul>
+<p>S'il veut mettre à jour jQuery, il supprime l'ancienne version et recommence.</p>
+<figure class="stretch">
+<img src="img/jquery.svg" alt="">
+</figure>
+</section>
+<section id="construction-de-lapplication" class="slide level1">
+<h1>Construction de l'application</h1>
+<p>Le dev a installé sur son système :</p>
+<ul>
+<li>Ruby</li>
+<li>Jekyll</li>
+</ul>
+<p>Il lance une commande pour produire le site final : <br><code>bundle exec jekyll build</code></p>
+<p>Le dossier <code>_site/</code> contient maintenant une version déployable de l'application.</p>
+<figure class="stretch">
+<img src="img/machine.gif" alt="">
+</figure>
+</section>
+<section id="déploiement-de-lapplication" class="slide level1">
+<h1>Déploiement de l'application</h1>
+<p>Le dev envoie le contenu du dossier <code>_site/</code> vers son hébergement.</p>
+<p>Il peut utiliser (notamment) :</p>
+<ul>
+<li>FTP</li>
+<li>SFTP</li>
+<li>rsync</li>
+</ul>
+<figure class="stretch">
+<img src="img/throw.gif" alt="">
+</figure>
+</section>
+<section id="quelques-temps-plus-tard..." class="slide level1">
+<h1>Quelques temps plus tard...</h1>
+<p>Plus de projets → plus de devs</p>
+<p> </p>
+<figure class="stretch">
+<img src="img/300.gif" alt="">
+</figure>
+<p> </p>
+<p>Les devs doivent collaborer sur les projets, ce qui pose des problèmes.</p>
+</section>
+<section id="problèmes-de-collaboration" class="slide level1">
+<h1>Problèmes de collaboration</h1>
+<p>Quelques exemples :</p>
+<ul>
+<li>le code source ne peut <strong>pas</strong> être sur le poste d'un seul dev, la source de vérité non plus</li>
+<li>il faut pouvoir travailler à plusieurs <em>simultanément</em> sur le même projet</li>
+<li>tous les devs doivent être capable de :
+<ul>
+<li><strong>construire</strong> l'application (avec une recette <em>identique</em>)</li>
+<li>la <strong>tester</strong> (dans un environnement <em>identique</em>)</li>
+<li>la <strong>déployer</strong></li>
+</ul></li>
+</ul>
 </section>
     </div>
   </div>
