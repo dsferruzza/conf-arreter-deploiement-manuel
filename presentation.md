@@ -163,3 +163,40 @@ Quelques exemples :
 	- **construire** l'application (avec une recette *identique*)
 	- la **tester** (dans un environnement *identique*)
 	- la **déployer**
+
+
+# Version Control System
+
+Ou *VCS*, *logiciel de gestion de versions*.
+
+> Permet de stocker un ensemble de fichiers en conservant la chronologie de toutes les modifications qui ont été effectuées dessus.
+
+On code normalement, et on utilise le *VCS* pour organiser la journalisation de nos modifications.
+
+Aujourd'hui, on ne va parler que de [Git](https://git-scm.com/).
+<br>(mais il y en a d'autres)
+
+
+# Git
+
+<figure class="stretch"><img src="img/git-log.png" alt=""></figure>
+
+
+# Git
+
+<figure class="stretch"><img src="img/git-diff.png" alt=""></figure>
+
+
+# Git
+
+<figure class="stretch"><img src="img/git-branch.png" alt=""></figure>
+
+
+# Avantages de Git
+
+On peut :
+
+- bosser à plusieurs sur les mêmes fichiers *simultanément*
+- garder trace de chaque changement
+- naviguer dans l'historique
+- bosser sur plusieurs versions du projet en parallèle (anciennes version, fonctionnalités expérimentales, ...)
