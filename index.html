@@ -376,6 +376,156 @@
 <img src="img/meh.gif" alt="">
 </figure>
 </section>
+<section id="cicd" class="slide level1">
+<h1>CI/CD</h1>
+<p><em>Continuous Integration</em> &amp; <em>Continuous Delivery</em></p>
+<blockquote>
+<p>Vérifier à <strong>chaque</strong> modification de code source que le résultat des modifications ne produit pas de régression.</p>
+</blockquote>
+<p>Usages courants :</p>
+<ul>
+<li>vérifier qu'on peut <strong>construire et installer</strong> l'app</li>
+<li>vérifier que les <strong>tests automatisés</strong> passent avec succès</li>
+<li><strong>déployer</strong> l'app en (pré)production</li>
+</ul>
+<aside class="notes">
+<ul>
+<li>Artifacts</li>
+<li>Éviter les problèmes de dernière minute</li>
+<li>Tests par un tier neutre</li>
+</ul>
+</aside>
+</section>
+<section id="gitlab-ci" class="slide level1">
+<h1>GitLab CI</h1>
+<ol type="1">
+<li>Ajouter un fichier <code>.gitlab-ci.yml</code> au projet</li>
+<li>C'est tout !</li>
+</ol>
+<figure class="stretch">
+<img src="img/gitlab-runners.jpg" alt="">
+</figure>
+<pre class="yaml"><code>lint:
+  stage: test
+  script:
+    - npm install --quiet
+    - npm run lint</code></pre>
+</section>
+<section id="docker" class="slide level1">
+<h1>Docker</h1>
+<blockquote>
+<p>Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur Linux.</p>
+</blockquote>
+<p>On peut facilement créer une image Docker qui contient tous nos outils préférés.</p>
+<div class="smallcode">
+<pre class="dockerfile"><code>FROM debian:jessie
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN apt-get update \
+ &amp;&amp; apt-get install --no-install-recommends -y \
+    nodejs</code></pre>
+</div>
+</section>
+<section id="gitlab-ci-1" class="slide level1">
+<h1>GitLab CI</h1>
+<p>Chaque tâche de GitLab CI peut être lancée dans une image Docker : on maitrise l'environnement d'exécution.</p>
+<pre class="yaml"><code>lint:
+  stage: test
+  image: myorg/myimage:latest
+  script:
+    - npm install --quiet
+    - npm run lint
+  tags:
+    - docker</code></pre>
+<p>Une fois que c'est terminé, on récupère le résultat et on jette le container à la poubelle !</p>
+</section>
+<section id="gitlab-ci-2" class="slide level1">
+<h1>GitLab CI</h1>
+<p>Autres avantages :</p>
+<ul>
+<li>intégré à GitLab (UI, notifications, MR, ...)</li>
+<li>tâches en séquence <strong>et</strong> en parallèle</li>
+<li>suivi du log du <em>build</em> en temps réel</li>
+<li>extraction des fichiers produits dans une archive</li>
+</ul>
+<figure class="stretch">
+<img src="img/mind-blown.gif" alt="">
+</figure>
+</section>
+<section id="gitlab-ci-3" class="slide level1">
+<h1>GitLab CI</h1>
+<figure class="stretch">
+<img src="img/gitlab-pipelines.png" alt="">
+</figure>
+</section>
+<section id="bilan-2" class="slide level1">
+<h1>Bilan</h1>
+<ul>
+<li>tous les devs doivent être capable de :
+<ul>
+<li><strong>construire</strong> l'application (avec une recette <em>identique</em>)</li>
+<li>la <strong>tester</strong> (dans un environnement <em>identique</em>)</li>
+</ul></li>
+</ul>
+<blockquote>
+<p><strong>✓</strong>  On utilise GitLab CI pour lancer la construction et les tests dans une image Docker.</p>
+</blockquote>
+</section>
+<section id="déploiement-automatisé-cd" class="slide level1">
+<h1>Déploiement automatisé (CD)</h1>
+<p>On peut choisir d'exécuter certaines tâches uniquement dans certains cas :</p>
+<pre class="yaml"><code>deploy_prod:
+  stage: deploy
+  image: myorg/myimage:latest
+  script:
+    - npm install --quiet
+    - npm run lint
+    - # deploy command
+  tags:
+    - docker
+  only:
+    - tags</code></pre>
+</section>
+<section id="variables" class="slide level1">
+<h1>Variables</h1>
+<figure class="stretch">
+<img src="img/gitlab-variables.png" alt="">
+</figure>
+<div class="smallcode">
+<pre class="yaml"><code>some_task:
+  script:
+    - echo &quot;$TEST&quot;</code></pre>
+</div>
+</section>
+<section id="rsynclftp" class="slide level1">
+<h1>rsync/lftp</h1>
+</section>
+<section id="deployer" class="slide level1">
+<h1>Deployer</h1>
+</section>
+<section id="bonus-artifacts-dependencies" class="slide level1">
+<h1>Bonus : artifacts &amp; dependencies</h1>
+</section>
+<section id="bonus-environnements" class="slide level1">
+<h1>Bonus : environnements</h1>
+</section>
+<section id="références" class="slide level1">
+<h1>Références</h1>
+<ul>
+<li><a href="https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos">Immutable infrastructure with NixOS</a> (comment je crée et maintiens mes environnements de préprod)</li>
+</ul>
+</section>
+<section id="conclusion" class="slide level1">
+<h1>Conclusion</h1>
+</section>
+<section id="questions" class="slide level1">
+<h1>Questions ?</h1>
+<figure class="stretch">
+<img src="img/question.gif" alt="">
+</figure>
+<p>Twitter : <a href="https://twitter.com/d_sferruzza">@d_sferruzza</a></p>
+<p>Slides sur GitHub :</p>
+<p><a href="http://github.com/dsferruzza/conf-arreter-deploiement-manuel">dsferruzza/conf-arreter-deploiement-manuel</a></p>
+</section>
     </div>
   </div>
 

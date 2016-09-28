@@ -356,3 +356,155 @@ On n'est pas des animaux. On ajoute un fichier `README` qui documente :
 - ...
 
 <figure class="stretch"><img src="img/meh.gif" alt=""></figure>
+
+
+# CI/CD
+
+*Continuous Integration* & *Continuous Delivery*
+
+> Vérifier à **chaque** modification de code source que le résultat des modifications ne produit pas de régression.
+
+Usages courants :
+
+- vérifier qu'on peut **construire et installer** l'app
+- vérifier que les **tests automatisés** passent avec succès
+- **déployer** l'app en (pré)production
+
+<div class="notes">
+- Artifacts
+- Éviter les problèmes de dernière minute
+- Tests par un tier neutre
+</div>
+
+
+# GitLab CI
+
+1. Ajouter un fichier `.gitlab-ci.yml` au projet
+2. C'est tout !
+
+<figure class="stretch"><img src="img/gitlab-runners.jpg" alt=""></figure>
+
+```yaml
+lint:
+  stage: test
+  script:
+    - npm install --quiet
+    - npm run lint
+```
+
+# Docker
+
+> Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur Linux.
+
+On peut facilement créer une image Docker qui contient tous nos outils préférés.
+
+<div class="smallcode">
+```dockerfile
+FROM debian:jessie
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y \
+    nodejs
+```
+</div>
+
+
+# GitLab CI
+
+Chaque tâche de GitLab CI peut être lancée dans une image Docker : on maitrise l'environnement d'exécution.
+
+```yaml
+lint:
+  stage: test
+  image: myorg/myimage:latest
+  script:
+    - npm install --quiet
+    - npm run lint
+  tags:
+    - docker
+```
+
+Une fois que c'est terminé, on récupère le résultat et on jette le container à la poubelle !
+
+
+# GitLab CI
+
+Autres avantages :
+
+- intégré à GitLab (UI, notifications, MR, ...)
+- tâches en séquence **et** en parallèle
+- suivi du log du *build* en temps réel
+- extraction des fichiers produits dans une archive
+
+<figure class="stretch"><img src="img/mind-blown.gif" alt=""></figure>
+
+
+# GitLab CI
+
+<figure class="stretch"><img src="img/gitlab-pipelines.png" alt=""></figure>
+
+
+# Bilan
+
+- tous les devs doivent être capable de :
+	- **construire** l'application (avec une recette *identique*)
+	- la **tester** (dans un environnement *identique*)
+
+> **&check;**&nbsp; On utilise GitLab CI pour lancer la construction et les tests dans une image Docker.
+
+
+# Déploiement automatisé (CD)
+
+On peut choisir d'exécuter certaines tâches uniquement dans certains cas :
+
+```yaml
+deploy_prod:
+  stage: deploy
+  image: myorg/myimage:latest
+  script:
+    - npm install --quiet
+    - npm run lint
+    - # deploy command
+  tags:
+    - docker
+  only:
+    - tags
+```
+
+
+# Variables
+
+<figure class="stretch"><img src="img/gitlab-variables.png" alt=""></figure>
+
+<div class="smallcode">
+```yaml
+some_task:
+  script:
+    - echo "$TEST"
+```
+</div>
+
+
+# rsync/lftp
+# Deployer
+# Bonus : artifacts & dependencies
+# Bonus : environnements
+
+
+# Références
+
+- [Immutable infrastructure with NixOS](https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos) (comment je crée et maintiens mes environnements de préprod)
+
+
+# Conclusion
+
+
+# Questions ?
+
+<figure class="stretch"><img src="img/question.gif" alt=""></figure>
+
+Twitter : [\@d_sferruzza](https://twitter.com/d\_sferruzza)
+
+Slides sur GitHub :
+
+[dsferruzza/conf-arreter-deploiement-manuel](http://github.com/dsferruzza/conf-arreter-deploiement-manuel)
