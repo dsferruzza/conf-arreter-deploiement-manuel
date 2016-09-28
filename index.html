@@ -162,8 +162,8 @@
 <img src="img/throw.gif" alt="">
 </figure>
 </section>
-<section id="quelques-temps-plus-tard..." class="slide level1">
-<h1>Quelques temps plus tard...</h1>
+<section id="le-temps-passe..." class="slide level1">
+<h1>Le temps passe...</h1>
 <p>Plus de projets → plus de devs</p>
 <p> </p>
 <figure class="stretch">
@@ -218,10 +218,163 @@
 <p>On peut :</p>
 <ul>
 <li>bosser à plusieurs sur les mêmes fichiers <em>simultanément</em></li>
-<li>garder trace de chaque changement</li>
+<li>garder trace de <em>chaque</em> changement</li>
 <li>naviguer dans l'historique</li>
-<li>bosser sur plusieurs versions du projet en parallèle (anciennes version, fonctionnalités expérimentales, ...)</li>
+<li>bosser sur plusieurs versions du projet <em>en parallèle</em> (anciennes versions, fonctionnalités expérimentales, ...)</li>
 </ul>
+<blockquote>
+<p>Apprenez Git. Utilisez Git.</p>
+</blockquote>
+<p>Utilisez une <strong>interface graphique</strong> pour débuter. <br>Exemple : <a href="https://desktop.github.com/">GitHub Desktop</a></p>
+</section>
+<section id="gitlab" class="slide level1">
+<h1>GitLab</h1>
+<figure class="stretch">
+<img src="img/gitlab.svg" alt="">
+</figure>
+<blockquote>
+<p><a href="https://about.gitlab.com/">GitLab</a> unifies chat, issues, code review,<br>CI and CD into a single UI</p>
+</blockquote>
+</section>
+<section id="gitlab-1" class="slide level1">
+<h1>GitLab</h1>
+<figure class="stretch">
+<img src="img/gitlab-mr.png" alt="">
+</figure>
+</section>
+<section id="bilan" class="slide level1">
+<h1>Bilan</h1>
+<ul>
+<li>le code source ne peut <strong>pas</strong> être sur le poste d'un seul dev, la source de vérité non plus</li>
+</ul>
+<blockquote>
+<p><strong>✓</strong>  La source de vérité est le dépôt Git dans GitLab.</p>
+</blockquote>
+<ul>
+<li>il faut pouvoir travailler à plusieurs <em>simultanément</em> sur le même projet</li>
+</ul>
+<blockquote>
+<p><strong>✓</strong>  Git permet ça, et GitLab ajoute du confort !</p>
+</blockquote>
+</section>
+<section id="problème" class="slide level1">
+<h1>Problème</h1>
+<p>Inclure jQuery dans la base de code rend :</p>
+<ul>
+<li>les <em>diff</em> peu lisibles</li>
+<li>les <em>merge</em> conflictuelles</li>
+</ul>
+<p>jQuery est une dépendance <strong>externe</strong> : on n'a pas envie de la gérer comme le reste du code qu'on écrit !</p>
+<figure class="stretch">
+<img src="img/gtfo.gif" alt="">
+</figure>
+</section>
+<section id="npm" class="slide level1">
+<h1>npm</h1>
+<blockquote>
+<p><a href="https://www.npmjs.com/">npm</a> est le gestionnaire de paquets officiel de Node.js.</p>
+</blockquote>
+<p>On synchronise dans Git un <em>manifeste</em> qui contient des <strong>références</strong> vers les dépendances.</p>
+<p>Sur chaque poste de dev, on lance <code>npm install</code> pour récupérer ces dépendances et les placer dans le dossier <code>node_modules/</code>.</p>
+<figure class="stretch">
+<img src="img/npm.svg" alt="">
+</figure>
+</section>
+<section id="npm-1" class="slide level1">
+<h1>npm</h1>
+<p><code>package.json</code> :</p>
+<pre class="json"><code>{
+  &quot;name&quot;: &quot;my-awesome-package&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;dependencies&quot;: {
+    &quot;jquery&quot;: &quot;3.1.1&quot;
+  }
+}</code></pre>
+<p><code>.gitignore</code> :</p>
+<pre class="text"><code>/node_modules/</code></pre>
+</section>
+<section id="bilan-1" class="slide level1">
+<h1>Bilan</h1>
+<ul>
+<li>les dépendances externes sont synchronisées avec le reste du code</li>
+</ul>
+<blockquote>
+<p><strong>✓</strong>  On ne synchronise que des références, et on a un outil pour les résoudre et récupérer le contenu des dépendances.</p>
+</blockquote>
+</section>
+<section id="grunt" class="slide level1">
+<h1>Grunt</h1>
+<figure class="stretch">
+<img src="img/grunt.png" alt="">
+</figure>
+<blockquote>
+<p><a href="http://gruntjs.com/">Grunt</a> est un outil permettant de définir et lancer des tâches automatisées.</p>
+</blockquote>
+<p>On définit les tâches dans le fichier <code>Gruntfile.js</code> et on utilise la commande <code>grunt [tâche]</code> pour les lancer.</p>
+</section>
+<section id="grunt-1" class="slide level1">
+<h1>Grunt</h1>
+<p>Exemple : on veut <em>minifier</em> le JavaScript de notre application.</p>
+<div class="smallcode">
+<pre class="javascript"><code>module.exports = function(grunt) {
+
+  grunt.initConfig({
+    pkg: grunt.file.readJSON(&#39;package.json&#39;),
+    uglify: {
+      build: {
+        src: &#39;src/app.js&#39;,
+        dest: &#39;build/app.min.js&#39;
+      }
+    }
+  });
+
+  grunt.loadNpmTasks(&#39;grunt-contrib-uglify&#39;);
+
+  grunt.registerTask(&#39;default&#39;, [&#39;uglify&#39;]);
+
+};</code></pre>
+</div>
+<p><code>src/app.js</code> + Grunt → <code>build/app.min.js</code></p>
+</section>
+<section id="problème-1" class="slide level1">
+<h1>Problème</h1>
+<p>Si on synchronise <code>build/app.min.js</code> :</p>
+<ul>
+<li>on duplique pas mal d'informations (venant de <code>src/app.js</code>)</li>
+<li>les <em>merge</em> sont beaucoup plus difficiles à gérer</li>
+<li>les <em>diff</em> comportent des informations inutiles</li>
+</ul>
+<p>Si on ne le synchronise pas :</p>
+<ul>
+<li>il faut penser à le générer quand <code>src/app.js</code> est modifié</li>
+<li>il faut pour ça avoir les bonnes dépendances et un environnement propre</li>
+</ul>
+</section>
+<section id="readme" class="slide level1">
+<h1>README</h1>
+<p>On ajoute <code>/build/app.min.js</code> dans <code>.gitignore</code>.</p>
+<p>On n'est pas des animaux. On ajoute un fichier <code>README</code> qui documente :</p>
+<ul>
+<li>les outils requis</li>
+<li>comment installer les dépendances externes</li>
+<li>comment construire le fichier <code>/build/app.min.js</code></li>
+</ul>
+<figure class="stretch">
+<img src="img/understand.gif" alt="">
+</figure>
+</section>
+<section id="problèmes-potentiels" class="slide level1">
+<h1>Problèmes potentiels</h1>
+<ul>
+<li>on n'a pas vu que le README a changé</li>
+<li>on n'a pas vu que les versions des dépendances ont changé dans <code>package.json</code></li>
+<li>la procédure est cassée lorsqu'on la suit sur un environnement propre</li>
+<li>l'application qui ira en production est produite sur la machine d'un des devs</li>
+<li>...</li>
+</ul>
+<figure class="stretch">
+<img src="img/meh.gif" alt="">
+</figure>
 </section>
     </div>
   </div>
