@@ -140,7 +140,7 @@ Il peut utiliser (notamment) :
 <figure class="stretch"><img src="img/throw.gif" alt=""></figure>
 
 
-# Quelques temps plus tard...
+# Le temps passe...
 
 Plus de projets &rarr; plus de devs
 
@@ -197,6 +197,162 @@ Aujourd'hui, on ne va parler que de [Git](https://git-scm.com/).
 On peut :
 
 - bosser à plusieurs sur les mêmes fichiers *simultanément*
-- garder trace de chaque changement
+- garder trace de *chaque* changement
 - naviguer dans l'historique
-- bosser sur plusieurs versions du projet en parallèle (anciennes version, fonctionnalités expérimentales, ...)
+- bosser sur plusieurs versions du projet *en parallèle* (anciennes versions, fonctionnalités expérimentales, ...)
+
+> Apprenez Git.
+> Utilisez Git.
+
+Utilisez une **interface graphique** pour débuter.
+<br>Exemple : [GitHub Desktop](https://desktop.github.com/)
+
+
+# GitLab
+
+<figure class="stretch"><img src="img/gitlab.svg" alt=""></figure>
+
+> [GitLab](https://about.gitlab.com/) unifies chat, issues, code review,<br>CI and CD into a single UI
+
+
+# GitLab
+
+<figure class="stretch"><img src="img/gitlab-mr.png" alt=""></figure>
+
+
+# Bilan
+
+- le code source ne peut **pas** être sur le poste d'un seul dev, la source de vérité non plus
+
+> **&check;**&nbsp; La source de vérité est le dépôt Git dans GitLab.
+
+- il faut pouvoir travailler à plusieurs *simultanément* sur le même projet
+
+> **&check;**&nbsp; Git permet ça, et GitLab ajoute du confort !
+
+
+# Problème
+
+Inclure jQuery dans la base de code rend :
+
+- les *diff* peu lisibles
+- les *merge* conflictuelles
+
+jQuery est une dépendance **externe** : on n'a pas envie de la gérer comme le reste du code qu'on écrit !
+
+<figure class="stretch"><img src="img/gtfo.gif" alt=""></figure>
+
+
+# npm
+
+> [npm](https://www.npmjs.com/) est le gestionnaire de paquets officiel de Node.js.
+
+On synchronise dans Git un *manifeste* qui contient des **références** vers les dépendances.
+
+Sur chaque poste de dev, on lance `npm install` pour récupérer ces dépendances et les placer dans le dossier `node_modules/`.
+
+<figure class="stretch"><img src="img/npm.svg" alt=""></figure>
+
+
+# npm
+
+`package.json` :
+
+```json
+{
+  "name": "my-awesome-package",
+  "version": "1.0.0",
+  "dependencies": {
+    "jquery": "3.1.1"
+  }
+}
+```
+
+`.gitignore` :
+
+```text
+/node_modules/
+```
+
+
+# Bilan
+
+- les dépendances externes sont synchronisées avec le reste du code
+
+> **&check;**&nbsp; On ne synchronise que des références, et on a un outil pour les résoudre et récupérer le contenu des dépendances.
+
+
+# Grunt
+
+<figure class="stretch"><img src="img/grunt.png" alt=""></figure>
+
+> [Grunt](http://gruntjs.com/) est un outil permettant de définir et lancer des tâches automatisées.
+
+On définit les tâches dans le fichier `Gruntfile.js` et on utilise la commande `grunt [tâche]` pour les lancer.
+
+
+# Grunt
+
+Exemple : on veut *minifier* le JavaScript de notre application.
+
+<div class="smallcode">
+```javascript
+module.exports = function(grunt) {
+
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      build: {
+        src: 'src/app.js',
+        dest: 'build/app.min.js'
+      }
+    }
+  });
+
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  grunt.registerTask('default', ['uglify']);
+
+};
+```
+</div>
+
+`src/app.js` + Grunt &rarr; `build/app.min.js`
+
+
+# Problème
+
+Si on synchronise `build/app.min.js` :
+
+- on duplique pas mal d'informations (venant de `src/app.js`)
+- les *merge* sont beaucoup plus difficiles à gérer
+- les *diff* comportent des informations inutiles
+
+Si on ne le synchronise pas :
+
+- il faut penser à le générer quand `src/app.js` est modifié
+- il faut pour ça avoir les bonnes dépendances et un environnement propre
+
+
+# README
+
+On ajoute `/build/app.min.js` dans `.gitignore`.
+
+On n'est pas des animaux. On ajoute un fichier `README` qui documente :
+
+- les outils requis
+- comment installer les dépendances externes
+- comment construire le fichier `/build/app.min.js`
+
+<figure class="stretch"><img src="img/understand.gif" alt=""></figure>
+
+
+# Problèmes potentiels
+
+- on n'a pas vu que le README a changé
+- on n'a pas vu que les versions des dépendances ont changé dans `package.json`
+- la procédure est cassée lorsqu'on la suit sur un environnement propre
+- l'application qui ira en production est produite sur la machine d'un des devs
+- ...
+
+<figure class="stretch"><img src="img/meh.gif" alt=""></figure>
