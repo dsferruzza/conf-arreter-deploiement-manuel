@@ -133,7 +133,7 @@ Le dev envoie le contenu du dossier `_site/` vers son hébergement.
 
 Il peut utiliser (notamment) :
 
-- FTP
+- FTP (bof)
 - SFTP
 - rsync
 
@@ -163,6 +163,10 @@ Quelques exemples :
 	- **construire** l'application (avec une recette *identique*)
 	- la **tester** (dans un environnement *identique*)
 	- la **déployer**
+
+<div class="notes">
+chaises Ikea
+</div>
 
 
 # Version Control System
@@ -205,7 +209,7 @@ On peut :
 > Utilisez Git.
 
 Utilisez une **interface graphique** pour débuter.
-<br>Exemple : [GitHub Desktop](https://desktop.github.com/)
+<br>Exemple : [GitHub Desktop](https://desktop.github.com/) (Windows/Mac OS)
 
 
 # GitLab
@@ -214,10 +218,19 @@ Utilisez une **interface graphique** pour débuter.
 
 > [GitLab](https://about.gitlab.com/) unifies chat, issues, code review,<br>CI and CD into a single UI
 
+<div class="notes">
+forge logicielle
+</div>
+
 
 # GitLab
 
 <figure class="stretch"><img src="img/gitlab-mr.png" alt=""></figure>
+
+<div class="notes">
+- permet plein de workflows
+- master toujours stable
+</div>
 
 
 # Bilan
@@ -260,7 +273,7 @@ Sur chaque poste de dev, on lance `npm install` pour récupérer ces dépendance
 
 ```json
 {
-  "name": "my-awesome-package",
+  "name": "my-awesome-project",
   "version": "1.0.0",
   "dependencies": {
     "jquery": "3.1.1"
@@ -280,6 +293,11 @@ Sur chaque poste de dev, on lance `npm install` pour récupérer ces dépendance
 - les dépendances externes sont synchronisées avec le reste du code
 
 > **&check;**&nbsp; On ne synchronise que des références, et on a un outil pour les résoudre et récupérer le contenu des dépendances.
+
+<div class="notes">
+- MAJ des deps &rarr; commit
+- reproductible
+</div>
 
 
 # Grunt
@@ -319,14 +337,22 @@ module.exports = function(grunt) {
 
 `src/app.js` + Grunt &rarr; `build/app.min.js`
 
+<div class="notes">
+avantages par rapport à CLI :
+
+- écosystème Node
+- deps dans npm
+- ~ portable
+</div>
+
 
 # Problème
 
 Si on synchronise `build/app.min.js` :
 
 - on duplique pas mal d'informations (venant de `src/app.js`)
-- les *merge* sont beaucoup plus difficiles à gérer
 - les *diff* comportent des informations inutiles
+- les *merge* sont beaucoup plus difficiles à gérer
 
 Si on ne le synchronise pas :
 
@@ -338,7 +364,7 @@ Si on ne le synchronise pas :
 
 On ajoute `/build/app.min.js` dans `.gitignore`.
 
-On n'est pas des animaux. On ajoute un fichier `README` qui documente :
+On n'est pas des animaux, on ajoute un fichier `README` qui documente :
 
 - les outils requis
 - comment installer les dépendances externes
@@ -357,12 +383,16 @@ On n'est pas des animaux. On ajoute un fichier `README` qui documente :
 
 <figure class="stretch"><img src="img/meh.gif" alt=""></figure>
 
+<div class="notes">
+interprété par des **humains**
+</div>
+
 
 # CI/CD
 
 *Continuous Integration* & *Continuous Delivery*
 
-> Vérifier à **chaque** modification de code source que le résultat des modifications ne produit pas de régression.
+> CI = vérifier à **chaque** modification de code source que le résultat des modifications ne produit pas de régression.
 
 Usages courants :
 
@@ -436,7 +466,7 @@ Autres avantages :
 - suivi du log du *build* en temps réel
 - extraction des fichiers produits dans une archive
 
-<figure class="stretch"><img src="img/mind-blown.gif" alt=""></figure>
+<figure class="stretch"><img src="img/nice.gif" alt=""></figure>
 
 
 # GitLab CI
@@ -486,17 +516,125 @@ some_task:
 
 
 # rsync/lftp
+
+> Transférer en une commande un dossier local vers un serveur distant.
+
+- rsync : utilise SSH + protocole maison
+- lftp : utilise FTP
+
+Exemple (non-optimal) :
+
+<div class="smallcode">
+```bash
+rsync -r ./ "$USER:$PASSWORD@$HOST:/var/www/$CI_PROJECT_NAME"
+```
+</div>
+
+**Problème** : le site en production peut être *entre* 2 états (ancienne version et nouvelle version).
+
+
 # Deployer
+
+> [Deployer](http://deployer.org/) permet des déploiements **atomiques**.
+
+<div class="smallcode">
+```text
+/your/project/path
+|--releases
+|  |--20150513120631
+|--shared
+|  |--config.php
+|  |--...
+|--current -> /your/project/path/releases/20150513120631
+```
+</div>
+
+On définit les tâches de déploiement dans le fichier `deploy.php` et on utilise la commande `php deployer.phar [tâche]` pour les lancer.
+
+
+# Deployer
+
+`deploy.php` :
+
+<div class="smallcode">
+```php
+<?php
+
+require 'recipe/common.php';
+
+task('deploy:upload_code', function () {
+    upload('build', '{{release_path}}/');
+})->desc('Uploading code');
+
+task('deploy', [
+    'deploy:prepare',
+    'deploy:release',
+    'deploy:upload_code',
+    'deploy:symlink',
+    'cleanup',
+])->desc('Deploy your project');
+
+server('prod', getenv('PROD_HOST'))
+    ->user(getenv('PROD_USERNAME'))
+    ->password(getenv('PROD_PASSWORD'))
+    ->env('deploy_path', '~')
+    ->stage('production');
+
+set('default_stage', 'production');
+```
+</div>
+
+
 # Bonus : artifacts & dependencies
-# Bonus : environnements
+
+<figure class="stretch"><img src="img/gitlab-graph.png" alt=""></figure>
+
+<div class="smallcode">
+```yaml
+compile:
+  stage: build
+  dependencies:
+    - im_build
+  script:
+    - ...
+  artifacts:
+    name: "$CI_BUILD_NAME-$CI_BUILD_REF"
+    paths:
+      - target/
+    expire_in: 1 day
+  tags:
+    - docker
+```
+</div>
 
 
-# Références
+# Bilan
 
-- [Immutable infrastructure with NixOS](https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos) (comment je crée et maintiens mes environnements de préprod)
+- tous les devs doivent être capable de déployer l'application :
+
+> **&check;**&nbsp; On utilise GitLab CI + Deployer pour déployer automatiquement lorsqu'on crée un tag.
+
+<figure class="stretch"><img src="img/win.gif" alt=""></figure>
+
+
+# Bonus : gestion des environnements de préprod
+
+<figure class="stretch"><img src="img/nixos.svg" alt=""></figure>
+
+> The Purely Functional Linux Distribution
+>
+> <https://nixos.org>
+
+<https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos>
 
 
 # Conclusion
+
+> **Utilisez Git !**
+
+<figure class="stretch"><img src="img/do-it.gif" alt=""></figure>
+
+Et mettez en place un CI/CD sur votre projet :)
 
 
 # Questions ?
