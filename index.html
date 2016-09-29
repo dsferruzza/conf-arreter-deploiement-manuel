@@ -154,7 +154,7 @@
 <p>Le dev envoie le contenu du dossier <code>_site/</code> vers son hébergement.</p>
 <p>Il peut utiliser (notamment) :</p>
 <ul>
-<li>FTP</li>
+<li>FTP (bof)</li>
 <li>SFTP</li>
 <li>rsync</li>
 </ul>
@@ -185,6 +185,9 @@
 <li>la <strong>déployer</strong></li>
 </ul></li>
 </ul>
+<aside class="notes">
+<p>chaises Ikea</p>
+</aside>
 </section>
 <section id="version-control-system" class="slide level1">
 <h1>Version Control System</h1>
@@ -225,7 +228,7 @@
 <blockquote>
 <p>Apprenez Git. Utilisez Git.</p>
 </blockquote>
-<p>Utilisez une <strong>interface graphique</strong> pour débuter. <br>Exemple : <a href="https://desktop.github.com/">GitHub Desktop</a></p>
+<p>Utilisez une <strong>interface graphique</strong> pour débuter. <br>Exemple : <a href="https://desktop.github.com/">GitHub Desktop</a> (Windows/Mac OS)</p>
 </section>
 <section id="gitlab" class="slide level1">
 <h1>GitLab</h1>
@@ -235,12 +238,21 @@
 <blockquote>
 <p><a href="https://about.gitlab.com/">GitLab</a> unifies chat, issues, code review,<br>CI and CD into a single UI</p>
 </blockquote>
+<aside class="notes">
+<p>forge logicielle</p>
+</aside>
 </section>
 <section id="gitlab-1" class="slide level1">
 <h1>GitLab</h1>
 <figure class="stretch">
 <img src="img/gitlab-mr.png" alt="">
 </figure>
+<aside class="notes">
+<ul>
+<li>permet plein de workflows</li>
+<li>master toujours stable</li>
+</ul>
+</aside>
 </section>
 <section id="bilan" class="slide level1">
 <h1>Bilan</h1>
@@ -284,7 +296,7 @@
 <h1>npm</h1>
 <p><code>package.json</code> :</p>
 <pre class="json"><code>{
-  &quot;name&quot;: &quot;my-awesome-package&quot;,
+  &quot;name&quot;: &quot;my-awesome-project&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
   &quot;dependencies&quot;: {
     &quot;jquery&quot;: &quot;3.1.1&quot;
@@ -301,6 +313,12 @@
 <blockquote>
 <p><strong>✓</strong>  On ne synchronise que des références, et on a un outil pour les résoudre et récupérer le contenu des dépendances.</p>
 </blockquote>
+<aside class="notes">
+<ul>
+<li>MAJ des deps → commit</li>
+<li>reproductible</li>
+</ul>
+</aside>
 </section>
 <section id="grunt" class="slide level1">
 <h1>Grunt</h1>
@@ -335,14 +353,22 @@
 };</code></pre>
 </div>
 <p><code>src/app.js</code> + Grunt → <code>build/app.min.js</code></p>
+<aside class="notes">
+<p>avantages par rapport à CLI :</p>
+<ul>
+<li>écosystème Node</li>
+<li>deps dans npm</li>
+<li>~ portable</li>
+</ul>
+</aside>
 </section>
 <section id="problème-1" class="slide level1">
 <h1>Problème</h1>
 <p>Si on synchronise <code>build/app.min.js</code> :</p>
 <ul>
 <li>on duplique pas mal d'informations (venant de <code>src/app.js</code>)</li>
-<li>les <em>merge</em> sont beaucoup plus difficiles à gérer</li>
 <li>les <em>diff</em> comportent des informations inutiles</li>
+<li>les <em>merge</em> sont beaucoup plus difficiles à gérer</li>
 </ul>
 <p>Si on ne le synchronise pas :</p>
 <ul>
@@ -353,7 +379,7 @@
 <section id="readme" class="slide level1">
 <h1>README</h1>
 <p>On ajoute <code>/build/app.min.js</code> dans <code>.gitignore</code>.</p>
-<p>On n'est pas des animaux. On ajoute un fichier <code>README</code> qui documente :</p>
+<p>On n'est pas des animaux, on ajoute un fichier <code>README</code> qui documente :</p>
 <ul>
 <li>les outils requis</li>
 <li>comment installer les dépendances externes</li>
@@ -375,12 +401,15 @@
 <figure class="stretch">
 <img src="img/meh.gif" alt="">
 </figure>
+<aside class="notes">
+<p>interprété par des <strong>humains</strong></p>
+</aside>
 </section>
 <section id="cicd" class="slide level1">
 <h1>CI/CD</h1>
 <p><em>Continuous Integration</em> &amp; <em>Continuous Delivery</em></p>
 <blockquote>
-<p>Vérifier à <strong>chaque</strong> modification de code source que le résultat des modifications ne produit pas de régression.</p>
+<p>CI = vérifier à <strong>chaque</strong> modification de code source que le résultat des modifications ne produit pas de régression.</p>
 </blockquote>
 <p>Usages courants :</p>
 <ul>
@@ -448,7 +477,7 @@ RUN apt-get update \
 <li>extraction des fichiers produits dans une archive</li>
 </ul>
 <figure class="stretch">
-<img src="img/mind-blown.gif" alt="">
+<img src="img/nice.gif" alt="">
 </figure>
 </section>
 <section id="gitlab-ci-3" class="slide level1">
@@ -498,24 +527,117 @@ RUN apt-get update \
 </section>
 <section id="rsynclftp" class="slide level1">
 <h1>rsync/lftp</h1>
+<blockquote>
+<p>Transférer en une commande un dossier local vers un serveur distant.</p>
+</blockquote>
+<ul>
+<li>rsync : utilise SSH + protocole maison</li>
+<li>lftp : utilise FTP</li>
+</ul>
+<p>Exemple (non-optimal) :</p>
+<div class="smallcode">
+<pre class="bash"><code>rsync -r ./ &quot;$USER:$PASSWORD@$HOST:/var/www/$CI_PROJECT_NAME&quot;</code></pre>
+</div>
+<p><strong>Problème</strong> : le site en production peut être <em>entre</em> 2 états (ancienne version et nouvelle version).</p>
 </section>
 <section id="deployer" class="slide level1">
 <h1>Deployer</h1>
+<blockquote>
+<p><a href="http://deployer.org/">Deployer</a> permet des déploiements <strong>atomiques</strong>.</p>
+</blockquote>
+<div class="smallcode">
+<pre class="text"><code>/your/project/path
+|--releases
+|  |--20150513120631
+|--shared
+|  |--config.php
+|  |--...
+|--current -&gt; /your/project/path/releases/20150513120631</code></pre>
+</div>
+<p>On définit les tâches de déploiement dans le fichier <code>deploy.php</code> et on utilise la commande <code>php deployer.phar [tâche]</code> pour les lancer.</p>
+</section>
+<section id="deployer-1" class="slide level1">
+<h1>Deployer</h1>
+<p><code>deploy.php</code> :</p>
+<div class="smallcode">
+<pre class="php"><code>&lt;?php
+
+require &#39;recipe/common.php&#39;;
+
+task(&#39;deploy:upload_code&#39;, function () {
+    upload(&#39;build&#39;, &#39;{{release_path}}/&#39;);
+})-&gt;desc(&#39;Uploading code&#39;);
+
+task(&#39;deploy&#39;, [
+    &#39;deploy:prepare&#39;,
+    &#39;deploy:release&#39;,
+    &#39;deploy:upload_code&#39;,
+    &#39;deploy:symlink&#39;,
+    &#39;cleanup&#39;,
+])-&gt;desc(&#39;Deploy your project&#39;);
+
+server(&#39;prod&#39;, getenv(&#39;PROD_HOST&#39;))
+    -&gt;user(getenv(&#39;PROD_USERNAME&#39;))
+    -&gt;password(getenv(&#39;PROD_PASSWORD&#39;))
+    -&gt;env(&#39;deploy_path&#39;, &#39;~&#39;)
+    -&gt;stage(&#39;production&#39;);
+
+set(&#39;default_stage&#39;, &#39;production&#39;);</code></pre>
+</div>
 </section>
 <section id="bonus-artifacts-dependencies" class="slide level1">
 <h1>Bonus : artifacts &amp; dependencies</h1>
+<figure class="stretch">
+<img src="img/gitlab-graph.png" alt="">
+</figure>
+<div class="smallcode">
+<pre class="yaml"><code>compile:
+  stage: build
+  dependencies:
+    - im_build
+  script:
+    - ...
+  artifacts:
+    name: &quot;$CI_BUILD_NAME-$CI_BUILD_REF&quot;
+    paths:
+      - target/
+    expire_in: 1 day
+  tags:
+    - docker</code></pre>
+</div>
 </section>
-<section id="bonus-environnements" class="slide level1">
-<h1>Bonus : environnements</h1>
-</section>
-<section id="références" class="slide level1">
-<h1>Références</h1>
+<section id="bilan-3" class="slide level1">
+<h1>Bilan</h1>
 <ul>
-<li><a href="https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos">Immutable infrastructure with NixOS</a> (comment je crée et maintiens mes environnements de préprod)</li>
+<li>tous les devs doivent être capable de déployer l'application :</li>
 </ul>
+<blockquote>
+<p><strong>✓</strong>  On utilise GitLab CI + Deployer pour déployer automatiquement lorsqu'on crée un tag.</p>
+</blockquote>
+<figure class="stretch">
+<img src="img/win.gif" alt="">
+</figure>
+</section>
+<section id="bonus-gestion-des-environnements-de-préprod" class="slide level1">
+<h1>Bonus : gestion des environnements de préprod</h1>
+<figure class="stretch">
+<img src="img/nixos.svg" alt="">
+</figure>
+<blockquote>
+<p>The Purely Functional Linux Distribution</p>
+<p><a href="https://nixos.org" class="uri">https://nixos.org</a></p>
+</blockquote>
+<p><a href="https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos" class="uri">https://dsferruzza.github.io/conf-immutable-infrastructure-with-nixos</a></p>
 </section>
 <section id="conclusion" class="slide level1">
 <h1>Conclusion</h1>
+<blockquote>
+<p><strong>Utilisez Git !</strong></p>
+</blockquote>
+<figure class="stretch">
+<img src="img/do-it.gif" alt="">
+</figure>
+<p>Et mettez en place un CI/CD sur votre projet :)</p>
 </section>
 <section id="questions" class="slide level1">
 <h1>Questions ?</h1>
